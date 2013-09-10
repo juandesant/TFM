@@ -1,4 +1,5 @@
-\chapter{Integrating NoSQL in the Virtual Observatory}
+\chapter{Integrating NoSQL in the Virtual Observatory} % (fold)
+\label{cha:integrating_nosql_in_the_virtual_observatory}
 
 Modern relational databases have shown little efficiency in certain applications using intensive data, like indexing of a large number of documents, sites rendering with high traffic, and streaming sites.
 
@@ -193,7 +194,7 @@ To provide the ability to search and aggregate information across this complex d
 Data Aggregation System (DAS),
 built on
 top of
-MongoDB.  According to Valentin Kuznetsov, a research associate at Cornell University, and team member, \emph{``there was nothing specific to the system related to our experiment''}\urlnote{http://www.computerweekly.com/news/2240166469/Cornell-Cern-project-plumps-for-NoSQL-DBMS}, so it can be deduced that this MongoDB approach is extensible. 
+MongoDB.  According to Valentin Kuznetsov, a research associate at Cornell University, and team member, \emph{``there was nothing specific to the system related to our experiment''}\urlnote{http://www.computerweekly.com/news/2240166469/Cornell-Cern-project-plumps-for-NoSQL-DBMS}, so it can be deduced that this MongoDB approach is extensible.
 % NOTA: Añadir link o publicación como cita del entrecomillado
 
 % subsection cms_at_the_lhc_mongodb (end)
@@ -260,7 +261,7 @@ benefiting from BigCouch's MapReduce engine.
 \section{Choosing a NoSQL database: MongoDB} % (fold)
 \label{sec:mongodb_a_document_oriented_database}
 
-MongoDB (\emph{humongous}) is an open source document-oriented
+MongoDB (from \emph{humongous}) is an open source document-oriented
 NoSQL
 database system developed and supported by 10gen.
 % It is part of the NoSQL family of database systems.
@@ -356,7 +357,7 @@ clause.
 
 Once we have seen the main features of MongoDB, we can move on to the 
 system % language
-itself.
+itself~\cite{MongoWeb,Chodorow10,Chodorow11}.
 
 % subsection main_features (end)
 
@@ -457,7 +458,9 @@ Listing~\ref{lst:mapreducesample} shows how to define a MapReduce job in MongoDB
 
 The first issue when working with FITS files is its inadequacy for storing information. In XXI century is difficult to maintain such storage model. So the first and more obvious solution would be replacing FITS headers with their counterparts in a non relational database. 
 
-Another issue when working with FITS format is the great amount of possible key-value pairs in FITS headers. A possible solution for this problem could be use the features of MongoDB to translate FITS keywords into collections. So, we could create as much documents as needed, and storing them into MongoDB. Should we need to create supertypes of FITS headers, relations are also available in MongoDB through document linking (with no physical restriction in the sense of relational constraint). In this situation the schema flexibility means that we can model documents that share a similar structure but not enforced to have to same.
+Another issue when working with FITS format is the great amount of possible key-value pairs in FITS headers. A possible solution for this problem could be use the features of MongoDB to translate FITS keywords into collections. So, we could create as
+many % much
+documents as needed, and storing them into MongoDB. Should we need to create supertypes of FITS headers, relations are also available in MongoDB through document linking (with no physical restriction in the sense of relational constraint). In this situation the schema flexibility means that we can model documents that share a similar structure but not enforced to have to same.
 
 Another related problem is having multiple FITS formats\footnote{The IAU FITS Working Group (IAU-FWG) is the international control authority for the FITS (Flexible Image Transport System) data format: \url{http://fits.gsfc.nasa.gov/iaufwg/iaufwg.html}}, representing the users need for storing and handling the different information requirements:
 
@@ -473,7 +476,16 @@ We show now a logical layout using MongoDB features to solve the previously pose
 
 For the sake of simplicity and clarity, we have not included all FITS keywords, focusing on the abstraction.
 
-Several proposals of using FITS store in a database have been made, for instance, ESO KEYWORD REPOSITORY\urlnote{http://labs.adsabs.harvard.edu/ui/abs/2008SPIE.7016E..51V}, a metadata database containing all information stored in almost 10 million FITS file headers using Sybase IQ server\urlnote{http://www.sybase.com/products/datawarehousing/sybaseiq}, an analytic server specifically designed for advanced analysis techniques and data storing. For this work, we can profit from MongoDB store units (collections, documents and fields). MongoDB allows to define as much kinds of documents as needed, sort of meta-documents, considering that there is no compulsory for them having the same structure. 
+Several proposals
+for storing
+FITS
+header metadata
+in a database have been made. One of the examples is the ESO 
+Keyword Repository~\cite{2008SPIE.7016E..51V}, a metadata database containing all information stored in almost 10 million FITS file headers using Sybase IQ server\urlnote{http://www.sybase.com/products/datawarehousing/sybaseiq}, a columnar storage RDBMS.
+
+For this work, we can profit from MongoDB document-oriented storage support (collections, documents and fields). MongoDB allows to define as
+many % much
+kinds of documents as needed, sort of meta-documents, considering that there is no compulsory for them having the same structure. 
 
 \paragraph{Solution}
 
@@ -501,7 +513,7 @@ PCOUNT = 0 /
 END
 \end{lstlisting}
 
-Prior to translating it into MongoDB, we create several collections in \ref{lst:fitstypes}, one for each different FITS types.
+Prior to translating it into MongoDB, we create several collections in Listing~\ref{lst:fitstypes}, one for each different FITS types.
 
 \begin{lstlisting}[float,label=lst:fitstypes,caption=MongoDB BSON code for creating the different FITS document types.]
 
@@ -562,17 +574,10 @@ Now, we have our FITS header into a database with a document structure. We keep 
 
 
 % \section{Rewriting ALMA Science Archive}
-\section{Scaling the ALMA Science Archive: OpenCADC and NoSQL} % (fold)
+\section{Scaling the ALMA Science Archive: Bridging OpenCADC and NoSQL} % (fold)
 \label{sec:rewriting_the_alma_science_archive_with_nosql}
-
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{images/aq.png}
-\caption{ALMA Science Archive Query}
-\end{figure}
-
  
-As stated in \cite{Etoka12}, the purpose of the ALMA archive is to provide services for:
+As stated in~\cite{2009ASPC..404..324E}, the purpose of the ALMA archive is to provide services for:
 
 \begin{itemize}
 
@@ -591,7 +596,7 @@ pipeline.
 
 The main objective of the
 ALMA Archive
-conceptual design
+conceptual design (see Fig.~\ref{fig:asa_afa})
 is to guarantee that three ALMA Regional Centres (North America,
 East Asia % Japan
 and Europe) hold an identical copy of the archive at the Joint ALMA Observatory in Santiago. 
@@ -603,60 +608,77 @@ The ALMA Science Archive (ASA), on the other hand, is the user-facing part of th
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{images/alma_science_archive.png}
-\caption{ALMA Science Archive and ALMA Front-end Archive, figure by A. Wicenec.}
+\includegraphics[width=0.8\textwidth]{images/alma_science_archive.png}
+\caption{ALMA Science Archive and ALMA Front-end Archive; figure by A. Wicenec.}
+\label{fig:asa_afa}
 \end{figure}
 
 
 % NOTA: desconectado del resto de la explicación
 % ASA database is inspired from ObsCore, RADAMS and Hubble Legacy Archive plus Virtual Observatory Software:
 % \begin{itemize}
-% \item openCADC (\ref{opencadc}), which is used for database access and VO access protocol
+% \item openCADC (\ref{sec:opencadc}), which is used for database access and VO access protocol
 % \item VOView, for Web components
 % \end{itemize}
 
 % TODO: Incluir 
 
 
-Despite all ALMA information can be accessed from the Archive, ASA provide a optimized way to access the data in a scientific way. One of the requirements of ASA design was to provide a search and query tool which allows several parameters (position, frequency, telescope related parameters, etc.). It has two major components: the DB, which is a plain relational database with denormalized structure and the interface, built as a web application.
+Despite all ALMA information can be accessed from the Archive, ASA provide a optimized way to access the data in a scientific way. One of the requirements of ASA design was to provide a search and query tool which allows several parameters (position, frequency, telescope related parameters, etc.). It has two major components: the DB, which is a plain relational database with denormalized structure and the interface
+(shown in Fig.~\ref{fig:asaqueryif}),
+built as a web application.
 
-\label{fig:asa_implementation}
 \begin{figure}
 \centering
-\includegraphics[width=14cm,height=8cm]{images/asa_implementation.png}
-\caption{ALMA implementation, from  \href{http://amiga.iaa.es/FCKeditor/UserFiles/File/VOandALMAarchive_web.pdf}{AMIGA-IAA Group Web}}
+\includegraphics[width=\textwidth]{images/aq.png}
+\caption{ALMA Science Archive Query Interface}
+\label{fig:asaqueryif}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[height=8cm]{images/asa_implementation.png}
+\caption{ALMA implementation diagram, courtesy of   \href{http://amiga.iaa.es/FCKeditor/UserFiles/File/VOandALMAarchive_web.pdf}{Juande Santander}}
+\label{fig:asa_implementation}
 \end{figure}
 
 
-The VO Technologies used in the ALMA Archive are (discussed in \ref{vochapter}):
+The VO Technologies used in the ALMA Archive are (discussed in Chapter~\ref{cha:the_virtual_observatory}):
 
 \begin{enumerate}
 \item VO Data Models
-\item Software
+\item Software libraries
   \begin{enumerate}
-    \item OpenCADC
-    \item VOView: a utility for viewing large data tables within a Web browser, reformatting a table in XML into HTML requested by the browser.
+    \item OpenCADC, the framework described in Section~\ref{sec:opencadc}, to provide support for TAP, UWS, and other VO technologies.
+    \item VOView\urlnote{http://code.google.com/p/voview/}: a JQuery-based JavaScript component for viewing large data tables within a Web browser, reformatting XML VOTables into HTML in the browser.
   \end{enumerate}
 \end{enumerate}
 
+
+
 \subsubsection{OpenCADC-MongoDB Interface}
 
-
-After studying NoSQL DBMS and showing their pros, in this section we assume we want to rewrite the Web application from ASA shown in \ref{fig:asa_implementation} to use a non-relational DBMS like MongoDB.
+After studying NoSQL DBMS and showing their pros, in this section we assume we want to rewrite the Web application from ASA shown in Fig.~\ref{fig:asa_implementation} to use a non-relational DBMS like MongoDB.
 
 To take advantage of the existing OpenCADC work, our proposal is to use MongoDB and Java programming language.
 
-We connect Java and MongoDB using two methods:
+We
+can
+connect Java and MongoDB using two methods:
 
 \begin{enumerate}
 
-\item The MongoDB-provided Java driver \urlnote{http://docs.mongodb.org/ecosystem/drivers/java/}
+\item the MongoDB-provided Java driver\urlnote{http://docs.mongodb.org/ecosystem/drivers/java/}; or
 
-\item The Spring framework\urlnote{http://www.springsource.org}, a comprehensive programming and configuration model for Java-based enterprise applications. The Spring Data MongoDB \urlnote{http://www.springsource.org/spring-data/mongodb} provides an extension to the Spring programming model that support writing applications for the new datastores, like MongoDB or CouchDB database. There is no need to use any additional component, provided we have this software.
+\item the Spring framework\urlnote{http://www.springsource.org}, a comprehensive programming and configuration model for Java-based enterprise applications. The Spring Data MongoDB \urlnote{http://www.springsource.org/spring-data/mongodb} provides an extension to the Spring programming model that support writing applications for the new datastores, like MongoDB or CouchDB database. There is no need to use any additional component, provided we have this software.
 
 \end{enumerate}
 
-We have chosen the second option, as Spring Data framework reduces notably the amount of code to be written. Let's see a comparison between the traditional Mongo way and the Spring Data one in \ref{lst:classic_new}.
+We have chosen the second option, as
+the
+Spring Data framework reduces notably the amount of code to be written. Let's see a comparison between the traditional Mongo way and the Spring Data one in Listing~\ref{lst:classic_new}.
+
+% NOTA: No se explica qué hace esto; ¿por qué la cláusula where("pid")?
 
 \begin{lstlisting}[float,label=lst:classic_new,caption=Old vs new syntax Mongo-Java connection.]
 // The classic MONGODB-JAVA connection
@@ -700,21 +722,55 @@ public List<Cols> getAll() {
 }
 \end{lstlisting}
 
-
-
 To accomplish this job, we have identified three major stages:
 
-\paragraph*{Defining a MongoDB schema for ObsCore}
-\label{sec:mongodb_obscore}
-To support the use cases identified in ObsCore IVOA documentation \urlnote{http://www.ivoa.net/documents/ObsCore/20110502/PR-ObsCore-v1.0-20110502.pdf} we must identify a set of elements that any ObsTAP service must support, ensuring that any query based on these parameters is guaranteed to be understood by all ObsTAP services.
+\paragraph*{Defining a MongoDB schema for ObsCore} % (fold)
+\label{par:mongodb_obscore}
+
+To support the use cases identified in ObsCore~\cite{2011arXiv1111.1758L},
+we must identify a set of elements that any ObsTAP service must support, ensuring that any query based on these parameters is guaranteed to be understood by all ObsTAP services.
 The ObsCore model must be implemented within TAP services, so that all queries can be executed, without changes have to be made, on any service that implements the model.
-TAP\_SCHEMA is the database schema where the tables and columns exposed by the service are described.
+\texttt{TAP\_SCHEMA} is the database schema where the tables and columns exposed by the service are described.
+
+MongoDB, thus, provides a very efficient way of supporting the optional columns of ObsCore by means of the variability of documents: particular attributes (ObsCore keywords) will exist or not depending on the document kind (FITS type), and any attribute can be missing, and still we can perform ObsCore queries: when a non-existing attribute is queried, is content is assumed to be NULL.
+
+% paragraph paragraph_name (end)
+
+\paragraph*{Ingesting data in the ObsCore database} % (fold)
+\label{par:ingesting_data_in_the_obscore_database}
 
 
+% We have previously commented
+In Section~\ref{sec:creating_a_fits_store_in_mongodb}
+we already presented
+the model used to ingest the FITS files
+containing reduced data, and carrying ObsCore-compatible metadata.
+% (and their particular metadata to standard models that in some cases need to be completed with metadata not available in FITS headers) files to the VO.
 
-\paragraph*{Addressing the data input}
-\label{sec:data_input}
-We have previously commented in \ref{sec:creating_a_fits_store_in_mongodb} the model used to solve the problems that arise when publishing archives with FITS (and their particular metadata to standard models that in some cases need to be completed with metadata not available in FITS headers) files to the VO.
+For the ASA, FITS files contain many more columns than available in ObsCore. But that is precisely the strength of this approach: the additional keywords can be imported as document attributes, and queried against, without having to change the database schema, or change queries.
 
-\paragraph*{Adapting the existing Java code}
-\label{sec:spring_mongo}
+
+% paragraph ingesting_data_in_the_obscore_database (end)
+
+\paragraph*{Adapting the existing Java code} % (fold)
+\label{par:adapting_the_existing_java_code}
+
+The Java code that implements the OpenCADC interfaces needs to be rewritten to make use of MongoDB. For that, we need to:
+
+\begin{itemize}
+	
+	\item Implement the DataSource interface so that we can connect with the MongoDB instance.
+	
+	\item Implement the TapSchema class so that VO-metadata about the MongoDB attributes (data type, UCDs, UTypes, etc.) can be recovered from the MongDB attributes. A different document store is needed for that, where the documents represent the \emph{database columns}, this is, the ObsCore document attributes themselves.
+	
+	\item All classes using SQL syntax need to use an adapter class that translates the SQL tokens into MongoDB operations. Fortunately, the jsqlparser tokenizer splits SQL in a parse tree that can be used for the reconstruction.
+	
+	\item Optionally, the QueryRunner class can be written using MapReduce jobs, instead of just using the SQL adaptor mentioned above, for further performance increases when doing queries.
+	
+\end{itemize}
+
+We can see that the classes to be changed within the OpenCADC are a small subset. Notably, the classes dealing with the TAP endpoints, parsing of TAP queries, job management (UWS pattern), etcetera, remain untouched, and only the classes most directly involved with database interfacing need to be changed. That is partly thanks to the architecture of the OpenCADC, where classes are assembled through dependency injection, and responsibilities are clearly delimitated by the interfaces.
+
+% paragraph adapting_the_existing_java_code (end)
+
+% chapter integrating_nosql_in_the_virtual_observatory (end)
