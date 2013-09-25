@@ -73,6 +73,7 @@
 %% # Portada de la tesis #
 \include{titlepage}
 
+\pagenumbering{roman}
 
 \tableofcontents
 
@@ -80,13 +81,23 @@
 %\include{gracias}
 
 
-%\begin{abstract} Abstract. \end{abstract}
 
 
 %% # 'Indices y listas de contenido #
+\cleardoublepage
+
 \listoffigures
+
+\cleardoublepage
+
 \listoftables
+
+\cleardoublepage
+
 \lstlistoflistings
+
+\cleardoublepage
+
 
 \pagenumbering{arabic}
 
@@ -102,7 +113,7 @@
 %\include{apendiceA}
 %\include{apendiceB}
 
-\nocite{*}
+% \nocite{*}
 \bibliography{biblio}
 
 \end{document}

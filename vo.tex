@@ -1,4 +1,6 @@
-\chapter{The Virtual Observatory} \label{vochapter}
+\chapter{The Virtual Observatory} % (fold)
+\label{cha:the_virtual_observatory}
+
 
 The International Virtual Observatory Alliance\urlnote{http://www.ivoa.net/}
 (IVOA) was formed in 2002 with the aim to
@@ -11,63 +13,18 @@ Working Groups are constituted with cross-program membership in those areas wher
 
 In this section we are not going to make a deep study of the Virtual Observatory techniques, technologies, protocols and interfaces, just those needed and selected to explain our proposal of including NoSQL into VO. Bearing in mind that the problem we are trying to address is data modelling, we will just make an overview of those aspects related with our work.
 
-\section{ObsTAP}
+\section{Flexible Image Transport System} % (fold)
+\label{sec:flexible_image_transport_system}
 
-A data model is a description of the objects represented by a computer system with their properties and relationships, a logical model detailing the decomposition of a complex dataset into simpler elements, like a collection of concepts and rules used in defining data model. 
-
-In 2011 IVOA proposed a new recommendation: Observation Data Model Core Components and its Implementation in the Table Access Protocol\footnote{\url{http://www.ivoa.net/documents/ObsCore/20110502/PR-ObsCore-v1.0-20110502.pdf}}. That document was intended to be a description of the interface which integrated the data modeling and data access aspects in a single service: ObsCore data model + Table Access Protocol = ObsTAP.
-
-\subsection{ObsCore Components Data Model}
-
-Its aim is to get the generic data model for the metadata necessary to describe any astronomical observation. In the IVOA recommendation, the data are described using UML.
-
-\subsection{Table Access Protocol}
-
-TAP defines a Web service for accessing tables containing astronomical catalogues. TAP is the protocol which underlies in the process of posing a query against a data source (or several data sources). The result of a query is a table, usually a VOTable.\footnote{Support for VOTable output is mandatory, while other formats may be available.}  
-
-Queries which use TAP protocol can be made through several clients, like:
-\begin{itemize}
-\item TOPCAT
-\item TAPHandle which operates fully within the Web browser
-\item The TAP shell, a command line interface to querying TAP servers, complete with metadata management and command line completion.
-\item The GAVO VOTable library, which allows embedding TAP queries in Python.
-\end{itemize}
-
-The types of queries implemented by TAP are:
-
-\begin{itemize}
-\item Data queries
-\item Metadata queries
-\item Virtual Observatory Support Interface (VOSI)
-\end{itemize}
-
-
-TAP includes support for multiple query languages, including queries specified using the Astronomical Data Query Language (ADQL [1]) and the Parameterised Query Language (PQL, under development). Other query languages are also supported, and this mechanism allows developments outside the IVOA to be used without modifying the TAP specification. Finally, it also includes support for both synchronous and asynchronous queries. Special support is provided for spatially indexed queries using the spatial extensions in ADQL. 
-
-Listing~\ref{lst:adqlsample} shows an ADQL sample query: a crossmatch between a user-uploaded catalog (\texttt{TAP\_UPLOAD.T1}), and
-the Third US Naval Observatory CCD Astrograph Catalog\urlnote{http://www.usno.navy.mil/USNO/astrometry/optical-IR-prod/ucac} (UCAC3) % UCAC
-catalog, compensating the fit for proper motion.
-
-\begin{lstlisting}[float,language=SQL,caption={ADQL sample query: the results will be a crossmatch between a user-uploaded catalog, and the UCAC3 catalog, compensating the fit for proper motion.},label=lst:adqlsample]
-SELECT 
- u.raj2000+d_alpha+d_pmalpha/cos(radians(u.dej2000))*(u.epoch-2000) AS ra_icrs,
- u.dej2000+d_delta+d_pmdelta*(u.epoch-2000) AS de_cicrs,
- u.pmra+d_pmalpha AS pmra_icrs,
- u.pmde+d_pmdelta AS pmde_icrs,
- u.*
-FROM
-  TAP_UPLOAD.T1 AS u
-  JOIN ucac3.icrscorr AS c
-  ON (c.alpha=FLOOR(u.raj2000)+0.5 and c.delta=FLOOR(u.dej2000)+0.5)
-\end{lstlisting}
-
-
-\section{Flexible Image Transport System}
 
 The
 Flexible Image Transport System (FITS) is an open standard defining a digital file format useful for storage, transmission and processing of scientific and other images. FITS is the most commonly used digital file format in astronomy. Unlike many image formats, FITS is designed specifically for scientific data and hence includes many provisions for describing photometric and spatial calibration information, together with image origin metadata. The FITS format was first standardized in 1981; it has evolved gradually since then, and the most recent version (3.0) was standardized in 2008. 
   
-FITS is also often used to store non-image data, such as spectra, photon lists, data cubes, or even structured data such as multi-table databases. A FITS file may contain several extensions, and each of these may contain a data object. For example, it is possible to store x-ray and infrared exposures in the same file. 
+FITS is also often used to store non-image data, such as spectra, photon lists, data cubes, or even structured data such as multi-table databases. A FITS file may contain several extensions, and each of these may contain a data object. For example, it
+could be % is
+possible to store
+X-ray % x-ray
+and infrared exposures in the same file. 
  
 FITS support is available in a variety of programming languages that are used for scientific work, including C, C++, C\#, Fortran, IDL, Java, Mathematica, MatLab, Perl, PDL, or Python. 
  
@@ -88,81 +45,159 @@ Besides, there are additional type of HDU called random groups, but only used fo
 \begin{figure}[tb]
 \centering
 \includegraphics[width=11cm,height=8cm]{images/fits_header.png}
-\caption{Viewing FITS header in Aladin}
+\caption{Viewing a FITS header in Aladin}
 \end{figure}
 
+% section flexible_image_transport_system (end)
 
-\section{OpenCADC}\label{opencadc}
+\section{Table Access Protocol} % (fold)
+\label{sec:table_access_protocol}
 
-OpenCADC (Canadian Astronomy Data Center) is a Virtual Observatory, used in ALMA Science Archive (for this reason is included in this chapter) tool which comprises several projects\footnote{We do not enumerate all of them here, for a full list, go to \url{https://code.google.com/p/opencadc/source/browse}}:
+The Table Access Protocol~\cite{2010tap..irec.....D} (TAP) defines a web service for accessing tables containing astronomical catalogues. TAP is the protocol which underlies in the process of posing a query against a data source (or several data sources). The result of a query is a table, usually a VOTable.\footnote{Support for VOTable output is mandatory, while other formats may be available.}  
 
-\subsection{Universal Worker Service}
+Queries which use TAP protocol can be made through several clients, like:
+\begin{itemize}
+\item TOPCAT\urlnote{http://www.star.bris.ac.uk/~mbt/topcat/}
+\item TAPHandle\urlnote{http://saada.unistra.fr/taphandle/}
+is a TAP client
+ which operates fully within the Web browser
+\item The TAP shell\urlnote{http://vo.ari.uni-heidelberg.de/soft/tapsh}, a command line interface to querying TAP servers, complete with metadata management and command line completion.
+\item The GAVO VOTable library\urlnote{http://docs.g-vo.org/DaCHS/votable.html}, which allows embedding TAP queries in Python.
+\end{itemize}
 
-The Universal Worker Service (UWS) pattern defines how to build asynchronous (the client does not wait for each request to be fulfilled; if the client disconnects from the service then the activity is not aborted), stateful (the service remembers results of a previous activity), job-oriented (the rules for setting and arranging the parameters for a job is called Job Description Language- JDL) services.
+The types of queries implemented by TAP are:
+
+\begin{itemize}
+\item data queries, where the query result is directly the science data to be operated upon;
+\item metadata queries, where the query result is metadata of the datasets, the archival service, or both; and
+\item Virtual Observatory Support Interface (VOSI) queries, which provide information on the different TAP service capabilities.
+\end{itemize}
+
+TAP includes support for multiple query languages, including queries specified using the Astronomical Data Query Language (ADQL; see~\cite{2008adql.ivoav0910O}) and the Parameterised Query Language~\cite{IVOA-Data-Access-Layer-Working-Group:2009lr} (PQL, under development). Other query languages are also supported, and this mechanism allows developments outside the IVOA to be used without modifying the TAP specification. Finally, it also includes support for both synchronous and asynchronous queries. Special support is provided for spatially indexed queries using the spatial extensions in ADQL. 
+
+Listing~\ref{lst:adqlsample} shows an ADQL sample query: a crossmatch between a user-uploaded catalog (\texttt{TAP\_UPLOAD.T1}), and
+the Third US Naval Observatory CCD Astrograph Catalog\urlnote{http://www.usno.navy.mil/USNO/astrometry/optical-IR-prod/ucac} (UCAC3) % UCAC
+catalog, compensating the fit for proper motion.
+
+\begin{lstlisting}[float,language=SQL,caption={ADQL sample query: the results will be a crossmatch between a user-uploaded catalog, and the UCAC3 catalog, compensating the fit for proper motion.},label=lst:adqlsample]
+SELECT 
+ u.raj2000+d_alpha+d_pmalpha/cos(radians(u.dej2000))*(u.epoch-2000) AS ra_icrs,
+ u.dej2000+d_delta+d_pmdelta*(u.epoch-2000) AS de_cicrs,
+ u.pmra+d_pmalpha AS pmra_icrs,
+ u.pmde+d_pmdelta AS pmde_icrs,
+ u.*
+FROM
+  TAP_UPLOAD.T1 AS u
+  JOIN ucac3.icrscorr AS c
+  ON (c.alpha=FLOOR(u.raj2000)+0.5 and c.delta=FLOOR(u.dej2000)+0.5)
+\end{lstlisting}
+
+\subsection{ObsCore and ObsTAP} % (fold)
+\label{sub:obstap}
+
+A data model is a description of the objects represented by a computer system with their properties and relationships, a logical model detailing the decomposition of a complex dataset into simpler elements, like a collection of concepts and rules used in defining data model. 
+
+In 2011 IVOA proposed a new recommendation: Observation Data Model Core
+Components~\cite{2011arXiv1111.1758L} (ObsCore). ObsCore is a 
+generic data model for the metadata necessary to describe any astronomical observation. Practically all of the ObsCore metadata (which is modelled as a single table with multiple columns) can be found in the FITS headers of reduced datasets.
+
+The ObsCore document was intended not just to be a description of said data model, but as an interface specification which integrated the data modeling and data access aspects in a single service, called ObsTAP.
+In other words, ObsTAP is the combination of the TAP with the ObsCore data model.
+
+% subsection obstap (end)
+
+\subsection{Universal Worker Service} % (fold)
+\label{sub:universal_worker_service}
+
+The Universal Worker Service~\cite{2010uws..irec.....H} (UWS) 
+standard defines a work
+pattern 
+that specifies
+how to build asynchronous (as the client does not wait for each request to be fulfilled; even if the client disconnects from the service, activity is not aborted), stateful (the service remembers results of a previous activity), job-oriented
+services\footnote{Job specification rules following the UWS pattern are written in the Job Description Language (JDL).}.
+
+When the execution starts, the job can adopt several states, following the state machine illustrated in Fig.~\ref{fig:jobstatuses}.
 
 \begin{figure}[tb]
 \centering
-\includegraphics[width=11cm,height=8cm]{images/Class_Diagram__UWS__UWSObjects.png}
-\caption{Class diagram representing UWS objects}
-\end{figure}
-
-When the execution starts, the job can adopt several states. The phases are the following:
-
-
-
-\begin{figure}[tb]
-\centering
-\includegraphics[width=11cm,height=8cm]{images/UWSStates.png}
+\includegraphics[height=8cm]{images/UWSStates.png}
 \caption{Universal Worker Server Job states}
+\label{fig:jobstatuses}
 \end{figure}
 
-Now, we make a subtle description of the structure of the code relating UWS in OpenCADC (the cadcUWS Library), the section of the code provides Job class and plugin architecture, servlet with UWS async and sync behaviour.
+% subsection universal_worker_service (end)
 
-\subsubsection{JobManager}
+% section table_access_protocol (end)
 
-Responsible for job control.
+\section{OpenCADC} % (fold)
+\label{sec:opencadc}
 
-\subsubsection{JobPersistence}
+The
+OpenCADC\urlnote{https://code.google.com/p/opencadc/source/browse}
+is a software framework, developed by the
+Canadian Astronomy Data Center (CADC), and which implements a number of VO standards. It can be used either directly or as a library to implement VO services.
 
-In charge of storing and retrieving Job state.
+OpenCADC is used for implementing the query capabilities of the ASA (see Fig.~\ref{fig:asa_implementation}). It is composed of several libraries, but the most important from the point of view of their interface are cadcUWS, which implements the UWS pattern, and cadcTAP, which implements the TAP web interface.
 
-\subsubsection{JobExecutor}
+\subsection{cadcUWS library} % (fold)
+\label{sub:cadcuws_library}
 
-It executes every job in separated threads.
+We will briefly describe
+the structure of the code relating UWS in OpenCADC (the cadcUWS Library), the section of the code provides Job class and plugin architecture, servlet with UWS async and sync behavior. These classes are illustrated in Fig.~\ref{fig:uwsjobs}, and listed below.
 
-\subsubsection{JobRunner}
+\begin{figure}[tb]
+\centering
+\includegraphics[height=8cm]{images/Class_Diagram__UWS__UWSObjects.png}
+\caption{Class diagram representing UWS objects}
+\label{fig:uwsjobs}
+\end{figure}
 
-The code that actually executes the job.
+\begin{description}
 
+\item[JobManager] Class responsible for job control.
 
-\subsection{cadcTAP Library}
+\item[JobPersistence] Class in In charge of storing and retrieving Job state.
 
-The cadcTAP library is responsible of async and sync queries, where QueryRunner implements JobRunner. It also contains TAP\_SCHEMA\footnote{TAP services try to be self-describing about what data they contain. They provide information on what tables they contain in special tables in TAP\_SCHEMA}
+\item[JobExecutor] Class which executes every job in separated threads.
+
+\item[JobRunner] The code that actually executes the job.
+
+\end{description}
+
+% subsection cadcuws_library (end)
+
+\subsection{cadcTAP library} % (fold)
+\label{sub:cadctap_library}
+
+The cadcTAP library is responsible of async and sync queries, where QueryRunner implements JobRunner. It also contains \texttt{TAP\_SCHEMA}\footnote{TAP services try to be self-describing about what data they contain. They provide information on what tables they contain in special tables in \texttt{TAP\_SCHEMA}}
 Data Definition Language\footnote{In RDBMS, the Data Definition Language is the language that allows for the creation of tables, fields, and data types.} (DDL) % DDL
 statements and is used by query parser to validate table and column usage.
 
-\subsubsection{TapQuery Interface}
+\begin{description}
+	\item[TapQuery Interface] It has a separate implementation for each \texttt{LANG} (e.g. \texttt{LANG=ADQL}) specified and processes the query to local SQL.
+	\item[SqlQuery] When code states \texttt{LANG=SQL}, it implements TapQuery and fully navigates it (\texttt{FROM}, \texttt{WHERE} and \texttt{HAVING} clauses).
+	
+	\item[AdqlQuery] Same as before when \texttt{LANG=ADQL}.
+	
+	
+	\item[Plugins] The QueryRunner class (below) needs to be able to find the following classes:
 
-It has a separate implementation for each LANG (e.g. $LANG = ADQL$) specified and processess the query to local SQL.
+	\begin{description}
+	\item[UploadManager] Interface for classes responsible for uploading local data to the remote TAP service.
+	\item[TableWriter] Interface for classes that convert the retrieved data into a particular data format.
+	\item[FileStore] Interface for classes that deal with the local file storage.
+	\end{description}
+	
+	\item[QueryRunner] Class that implements JobRunner and sets Job state, finds a DataSource and uses TapSchema, UploadManager, TapQuery and TableWriter.
+	
+\end{description}
 
-\subsubsection{SqlQuery}
-
-When code states $LANG=SQL$, it implements TapQuery and fully navigates it ($FROM, WHERE$ and $HAVING$ clauses).
-
-\subsubsection{AdqlQuery}
-
-Same as before when $LANG=ADQL$.
-
-\subsubsection{Plugins}
-
-\begin{itemize}
-\item UploadManager
-\item TableWriter
-\item FileStore
-\end{itemize}
+% subsection cadctap_library (end)
 
 
-\subsubsection{QueryRunner}
 
-It implements JobRunner and sets Job state, find DataSource and uses TapSchema, UploadManager, TapQuery and TableWriter.
+% section opencadc (end)
 
+
+
+% chapter the_virtual_observatory (end)
